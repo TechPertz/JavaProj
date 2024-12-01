@@ -19,7 +19,13 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.postgresql:postgresql:42.7.3'
+    implementation 'jakarta.servlet:jakarta.servlet-api:6.1.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'org.apache.logging.log4j:log4j-core'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
