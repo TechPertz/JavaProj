@@ -71,9 +71,12 @@ public class DrawingController extends TextWebSocketHandler {
 
     private void broadcastUpdate(Long boardId, DrawingMessage drawingMessage) throws IOException {
         WebSocketSession session = sessions.get(boardId);
+        LOGGER.info("Broadcasting drawing message to board {}", boardId);
         if (session != null && session.isOpen()) {
             drawingMessage.setType("UPDATE");
+            LOGGER.warn("the set type is {}", drawingMessage.getType());
             String message = objectMapper.writeValueAsString(drawingMessage);
+            LOGGER.warn(message);
             session.sendMessage(new TextMessage(message));
         }
     }
@@ -104,6 +107,10 @@ public class DrawingController extends TextWebSocketHandler {
 
         public void setType(String type) {
             this.type = type;
+        }
+
+        public String getType() {
+            return type;
         }
     }
 
