@@ -1,10 +1,13 @@
 package org.example.javaproj.backend.model;
 
+import org.apache.logging.log4j.LogManager;
 import org.example.javaproj.backend.Constants;
 
 import java.time.Instant;
 
 public class Board {
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+
     private Long id;
 
     private Long ownerId;
@@ -61,6 +64,7 @@ public class Board {
         int index = (x * Constants.RESOLUTION_WIDTH) + y;
 
         if (index < 0 || index >= board.getMatrixData().length()) {
+            LOGGER.warn("Invalid coordinates: x = {}, y = {}, index = {}", x, y, index);
             throw new IllegalArgumentException("Invalid x or y coordinates.");
         }
 

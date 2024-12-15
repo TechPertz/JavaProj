@@ -1,9 +1,13 @@
 package org.example.javaproj.backend;
 
 public class Constants {
+//    Testing resolution
+    public static final int RESOLUTION_WIDTH = 800;
+    public static final int RESOLUTION_HEIGHT = 600;
+
 //    480p
-    public static final int RESOLUTION_WIDTH = 640;
-    public static final int RESOLUTION_HEIGHT = 480;
+//    public static final int RESOLUTION_WIDTH = 640;
+//    public static final int RESOLUTION_HEIGHT = 480;
 
 //    1080p
 //    public static final int RESOLUTION_WIDTH = 1920;
