@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.example.javaproj.frontend.controllers.MainController">
+    <left>
+        <VBox spacing="10" padding="10">
+            <ListView fx:id="usersListView" prefWidth="150" />
+            <ToggleButton fx:id="penButton" text="Pen" onAction="#selectPen"/>
+            <ToggleButton fx:id="eraserButton" text="Eraser" onAction="#selectEraser"/>
+        </VBox>
+    </left>
+    <center>
+        <Canvas fx:id="whiteboardCanvas" width="800" height="600" />
+    </center>
+</BorderPane>

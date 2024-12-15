@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.5'
     id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.openjfx.javafxplugin' version '0.0.13' // JavaFX Plugin
 }
 
 group = 'org.example'
@@ -18,15 +19,36 @@ repositories {
 }
 
 dependencies {
+    // Spring Boot Dependencies
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.postgresql:postgresql:42.7.3'
-    implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
+    implementation 'com.fasterxml.jackson.core:jackson-databind'
+    implementation 'org.postgresql:postgresql:42.7.3'
 
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'org.apache.logging.log4j:log4j-core'
+
+    // JavaFX Dependencies managed by JavaFX Plugin
+    // No need to manually add them here
+
+    // Java-WebSocket Dependency for RealClient
+    implementation "org.java-websocket:Java-WebSocket:1.5.3"
+
+    // Testing Dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.9.3'
+}
+
+javafx {
+    version = "20"
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+    configuration = 'implementation'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
 
 tasks.named('test') {
