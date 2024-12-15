@@ -1,26 +1,22 @@
 package org.example.javaproj.backend.service;
 
+import org.apache.logging.log4j.LogManager;
 import org.example.javaproj.backend.model.Board;
 import org.example.javaproj.backend.model.User;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.dao.EmptyResultDataAccessException;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.time.Instant;
-import java.sql.Timestamp;
 import java.util.Map;
-
-import org.example.javaproj.backend.Constants;
 
 
 @Service
 public class BoardService {
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
     private final JdbcTemplate jdbcTemplate;
 
     public BoardService(JdbcTemplate jdbcTemplate) {
@@ -35,7 +31,7 @@ public class BoardService {
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, board.getOwnerId());
-            ps.setString(2, getDefaultBoard());
+            ps.setString(2, board.getMatrixData());
             ps.setTimestamp(3, Timestamp.from(Instant.now()));
             return ps;
         }, keyHolder);
@@ -47,11 +43,7 @@ public class BoardService {
         return board;
     }
 
-    private String getDefaultBoard(){
-        return "0".repeat(Constants.RESOLUTION_WIDTH * Constants.RESOLUTION_HEIGHT);
-    }
-
-    public Board getMainBoard(User owner) {
+    public Board getOrCreateMainBoard(User owner) {
         String sql = "SELECT * FROM boards";
         try {
             return jdbcTemplate.queryForObject(sql, this::mapRowToBoard);
@@ -59,6 +51,11 @@ public class BoardService {
             Board newBoard = new Board(owner);
             return createBoard(newBoard);
         }
+    }
+
+    public Board getMainBoard() {
+        String sql = "SELECT * FROM boards";
+        return jdbcTemplate.queryForObject(sql, this::mapRowToBoard);
     }
 
     public Board getBoardById(Long board_id) {

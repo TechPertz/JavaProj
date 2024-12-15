@@ -11,8 +11,8 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final DrawingController drawingController;
     private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+    private final DrawingController drawingController;
 
     public WebSocketConfig(DrawingController drawingController) {
         LOGGER.info("Starting WebSocket Config");

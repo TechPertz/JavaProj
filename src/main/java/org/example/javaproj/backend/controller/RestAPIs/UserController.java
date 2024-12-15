@@ -33,15 +33,15 @@ public class UserController {
         User user = userService.getUserByUsername(username);
 
         if (user != null) {
-            Board board = boardService.getMainBoard(user);
+            Board board = boardService.getOrCreateMainBoard(user);
             LoginResponse response = new LoginResponse("Login successful for user: " + username, user.getId(), board.getId(), board.getMatrixData());
             return ResponseEntity.ok(response);
         } else {
             LOGGER.warn("Unable to find user `{}`", username);
-            User newUser = new User(username);
-            newUser = userService.createUser(newUser);
-            Board board = boardService.getMainBoard(user);
-            LoginResponse response = new LoginResponse("New user created with id: " + newUser.getId(), user.getId(), board.getId(), board.getMatrixData());
+            user = new User(username);
+            user = userService.createUser(user);
+            Board board = boardService.getOrCreateMainBoard(user);
+            LoginResponse response = new LoginResponse("New user created with id: " + user.getId(), user.getId(), board.getId(), board.getMatrixData());
             return ResponseEntity.status(201).body(response);
         }
     }

@@ -10,5 +10,4 @@ public class JavaProjApplication {
         System.out.println("Starting server with test URL http://localhost:8080/test");
         SpringApplication.run(JavaProjApplication.class, args);
     }
-
 }

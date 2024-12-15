@@ -1,7 +1,8 @@
 package org.example.javaproj.backend.model;
 
-import java.time.Instant;
 import org.example.javaproj.backend.Constants;
+
+import java.time.Instant;
 
 public class Board {
     private Long id;
@@ -17,6 +18,11 @@ public class Board {
 
     public Board(User owner) {
         this.ownerId = owner.getId();
+        this.matrixData = getDefaultBoard();
+    }
+
+    private String getDefaultBoard() {
+        return "0".repeat(Constants.RESOLUTION_WIDTH * Constants.RESOLUTION_HEIGHT);
     }
 
     public Long getId() {
