@@ -1,10 +1,13 @@
 package org.example.javaproj.backend.dto;
 
+import org.example.javaproj.backend.Constants;
+
 public class LoginResponse {
     private String message;
     private Long user_id;
     private long board_id;
-    private String board_matrix_data;
+    private short[][] board_matrix_data;
+
 
     public LoginResponse() {
 
@@ -14,7 +17,18 @@ public class LoginResponse {
         this.message = message;
         this.user_id = user_id;
         this.board_id = board_id;
-        this.board_matrix_data = board_matrix_data;
+        this.board_matrix_data = getMatrixFromBoardString(board_matrix_data);
+    }
+
+    public short[][] getMatrixFromBoardString(String boardMatrixString) {
+        short[][] resp = new short[Constants.RESOLUTION_HEIGHT][Constants.RESOLUTION_WIDTH];
+        for (int i = 0; i < Constants.RESOLUTION_HEIGHT; i++) {
+            for (int j = 0; j < Constants.RESOLUTION_WIDTH; j++) {
+                resp[i][j] = (short) (boardMatrixString.charAt(i * Constants.RESOLUTION_WIDTH + j) - '0');
+            }
+        }
+
+        return resp;
     }
 
     public String getMessage() {
@@ -41,11 +55,11 @@ public class LoginResponse {
         this.board_id = board_id;
     }
 
-    public String getBoard_matrix_data() {
+    public short[][] getBoard_matrix_data() {
         return board_matrix_data;
     }
 
-    public void setBoard_matrix_data(String board_matrix_data) {
+    public void setBoard_matrix_data(short[][] board_matrix_data) {
         this.board_matrix_data = board_matrix_data;
     }
 }
