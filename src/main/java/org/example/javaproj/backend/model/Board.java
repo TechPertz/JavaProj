@@ -1,6 +1,7 @@
-package org.example.javaproj.model;
+package org.example.javaproj.backend.model;
 
 import java.time.Instant;
+import org.example.javaproj.backend.Constants;
 
 public class Board {
     private Long id;
@@ -50,9 +51,15 @@ public class Board {
         this.dateCreated = dateCreated;
     }
 
-    //    TODO: Complete functionality
-    public Board updatePixel(Board board, int x, int y, int val) {
-        String matrix_data = board.getMatrixData();
-        return board;
+    public void updatePixel(Board board, int x, int y, int val) {
+        int index = (x * Constants.RESOLUTION_WIDTH) + y;
+
+        if (index < 0 || index >= board.getMatrixData().length()) {
+            throw new IllegalArgumentException("Invalid x or y coordinates.");
+        }
+
+        char[] matrixArray = board.getMatrixData().toCharArray();
+        matrixArray[index] = (char) ('0' + val); // Convert integer val to char ('0' or '1')
+        board.setMatrixData(new String(matrixArray));
     }
 }

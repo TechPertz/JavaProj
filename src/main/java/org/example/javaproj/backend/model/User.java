@@ -1,4 +1,4 @@
-package org.example.javaproj.model;
+package org.example.javaproj.backend.model;
 
 import java.time.Instant;
 

@@ -1,6 +1,6 @@
-package org.example.javaproj.service;
+package org.example.javaproj.backend.service;
 
-import org.example.javaproj.model.User;
+import org.example.javaproj.backend.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;

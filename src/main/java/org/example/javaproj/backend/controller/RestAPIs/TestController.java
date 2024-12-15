@@ -1,4 +1,4 @@
-package org.example.javaproj.controller.RestAPIs;
+package org.example.javaproj.backend.controller.RestAPIs;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
