@@ -1,13 +1,13 @@
-package org.example.javaproj.controller.RestAPIs;
+package org.example.javaproj.backend.controller.RestAPIs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.example.javaproj.dto.LoginRequest;
-import org.example.javaproj.dto.LoginResponse;
-import org.example.javaproj.model.Board;
-import org.example.javaproj.model.User;
-import org.example.javaproj.service.BoardService;
-import org.example.javaproj.service.UserService;
+import org.example.javaproj.backend.dto.LoginRequest;
+import org.example.javaproj.backend.dto.LoginResponse;
+import org.example.javaproj.backend.model.Board;
+import org.example.javaproj.backend.model.User;
+import org.example.javaproj.backend.service.BoardService;
+import org.example.javaproj.backend.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;

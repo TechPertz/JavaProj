@@ -1,7 +1,7 @@
-package org.example.javaproj.service;
+package org.example.javaproj.backend.service;
 
-import org.example.javaproj.model.Board;
-import org.example.javaproj.model.User;
+import org.example.javaproj.backend.model.Board;
+import org.example.javaproj.backend.model.User;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -16,12 +16,12 @@ import java.time.Instant;
 import java.sql.Timestamp;
 import java.util.Map;
 
+import org.example.javaproj.backend.Constants;
+
 
 @Service
 public class BoardService {
     private final JdbcTemplate jdbcTemplate;
-    private static final int resolutionWidth = 1920;
-    private static final int resolutionHeight = 1080;
 
     public BoardService(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -48,7 +48,7 @@ public class BoardService {
     }
 
     private String getDefaultBoard(){
-        return "0".repeat(resolutionWidth * resolutionHeight);
+        return "0".repeat(Constants.RESOLUTION_WIDTH * Constants.RESOLUTION_HEIGHT);
     }
 
     public Board getMainBoard(User owner) {
@@ -77,5 +77,10 @@ public class BoardService {
         board.setMatrixData(rs.getString("matrix_data"));
         board.setDateCreated(rs.getTimestamp("date_created").toInstant());
         return board;
+    }
+
+    public void updateMatrixBoard(Board board) {
+        String sql = "UPDATE boards SET matrix_data = ? WHERE id = ?";
+        jdbcTemplate.update(sql, board.getMatrixData(), board.getId());
     }
 }
