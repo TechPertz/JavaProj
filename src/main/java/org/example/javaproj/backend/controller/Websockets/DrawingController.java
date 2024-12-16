@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.example.javaproj.backend.Constants;
 import org.example.javaproj.backend.model.Board;
 import org.example.javaproj.backend.model.DrawingMessage;
-import org.example.javaproj.backend.model.DrawingPoint;
 import org.example.javaproj.backend.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -103,8 +102,6 @@ public class DrawingController extends TextWebSocketHandler {
         }
         return Long.parseLong(paramValue);
     }
-
-
 
 
 }
