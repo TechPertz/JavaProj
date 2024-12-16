@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.example.javaproj.backend.Constants;
 import org.example.javaproj.backend.model.Board;
+import org.example.javaproj.backend.model.DrawingMessage;
+import org.example.javaproj.backend.model.DrawingPoint;
 import org.example.javaproj.backend.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -108,42 +110,7 @@ public class DrawingController extends TextWebSocketHandler {
         return Long.parseLong(paramValue);
     }
 
-    public static class DrawingMessage {
-        private DrawingPoint[] points;
-        private String type;
 
-        public DrawingPoint[] getPoints() {
-            return points;
-        }
 
-        public void setPoints(DrawingPoint[] points) {
-            this.points = points;
-        }
 
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getType() {
-            return type;
-        }
-    }
-
-    public static class DrawingPoint {
-        private int x;
-        private int y;
-        private int pen;
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getPen() {
-            return pen;
-        }
-    }
 }
