@@ -60,16 +60,21 @@ public class Board {
         this.dateCreated = dateCreated;
     }
 
-    public void updatePixel(Board board, int x, int y, int val) {
-        int index = (x * Constants.RESOLUTION_WIDTH) + y;
+    public void updateBoardPixels(DrawingMessage drawingMessage) {
+        for (DrawingPoint point : drawingMessage.getPoints()) {
+            this.updatePixel(point.getX(), point.getY(), point.getPen());
+        }
+    }
 
-        if (index < 0 || index >= board.getMatrixData().length()) {
+    public void updatePixel(int x, int y, int val) {
+        int index = (x * Constants.RESOLUTION_WIDTH) + y;
+        if (index < 0 || index >= this.getMatrixData().length()) {
             LOGGER.error("Invalid coordinates: x = {}, y = {}, index = {}", x, y, index);
 //            throw new IllegalArgumentException("Invalid x or y coordinates.");
         }
 
-        char[] matrixArray = board.getMatrixData().toCharArray();
+        char[] matrixArray = this.getMatrixData().toCharArray();
         matrixArray[index] = (char) ('0' + val); // Convert integer val to char ('0' or '1')
-        board.setMatrixData(new String(matrixArray));
+        this.setMatrixData(new String(matrixArray));
     }
 }

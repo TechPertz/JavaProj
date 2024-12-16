@@ -58,13 +58,6 @@ public class DrawingController extends TextWebSocketHandler {
         }
     }
 
-    private void updateBoard(Board board, DrawingMessage drawingMessage) {
-        for (DrawingPoint point : drawingMessage.getPoints()) {
-            board.updatePixel(board, point.getX(), point.getY(), point.getPen());
-        }
-        boardService.updateMatrixBoard(board);
-    }
-
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         Long boardId = 1L; // Using a constant Board ID for now
@@ -78,7 +71,8 @@ public class DrawingController extends TextWebSocketHandler {
             }
 
             DrawingMessage drawingMessage = objectMapper.readValue(message.getPayload(), DrawingMessage.class);
-            updateBoard(board, drawingMessage);
+            board.updateBoardPixels(drawingMessage);
+            boardService.updateMatrixBoard(board);
             broadcastUpdate(board.getId(), drawingMessage);
         } finally {
             lock.unlock();
