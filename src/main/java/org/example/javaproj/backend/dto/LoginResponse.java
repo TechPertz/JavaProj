@@ -20,6 +20,18 @@ public class LoginResponse {
         this.board_matrix_data = getMatrixFromBoardString(board_matrix_data);
     }
 
+    public void printMatrixBoardCount(short[][] matrixArray){
+        int count = 0;
+        for (short[] ints : matrixArray) {
+            for (short anInt : ints) {
+                if (anInt != 0) {
+                    count++;
+                }
+            }
+        }
+        System.out.println("Matrix board Pen Mark count = " + count);
+    }
+
     public short[][] getMatrixFromBoardString(String boardMatrixString) {
         short[][] resp = new short[Constants.RESOLUTION_HEIGHT][Constants.RESOLUTION_WIDTH];
         for (int i = 0; i < Constants.RESOLUTION_HEIGHT; i++) {
@@ -27,7 +39,7 @@ public class LoginResponse {
                 resp[i][j] = (short) (boardMatrixString.charAt(i * Constants.RESOLUTION_WIDTH + j) - '0');
             }
         }
-
+        printMatrixBoardCount(resp);
         return resp;
     }
 

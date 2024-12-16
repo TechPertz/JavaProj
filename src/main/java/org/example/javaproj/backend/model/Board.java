@@ -70,6 +70,7 @@ public class Board {
         int index = (x * Constants.RESOLUTION_WIDTH) + y;
         if (index < 0 || index >= this.getMatrixData().length()) {
             LOGGER.error("Invalid coordinates: x = {}, y = {}, index = {}", x, y, index);
+            return;
 //            throw new IllegalArgumentException("Invalid x or y coordinates.");
         }
 

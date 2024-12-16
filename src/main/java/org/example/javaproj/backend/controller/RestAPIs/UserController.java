@@ -42,6 +42,7 @@ public class UserController {
             user = new User(username);
             user = userService.createUser(user);
             Board board = boardService.getOrCreateMainBoard(user);
+
             LoginResponse response = new LoginResponse("New user created with id: " + user.getId(), user.getId(), board.getId(), board.getMatrixData());
             return ResponseEntity.status(201).body(response);
         }
