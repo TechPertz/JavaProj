@@ -64,8 +64,8 @@ public class Board {
         int index = (x * Constants.RESOLUTION_WIDTH) + y;
 
         if (index < 0 || index >= board.getMatrixData().length()) {
-            LOGGER.warn("Invalid coordinates: x = {}, y = {}, index = {}", x, y, index);
-            throw new IllegalArgumentException("Invalid x or y coordinates.");
+            LOGGER.error("Invalid coordinates: x = {}, y = {}, index = {}", x, y, index);
+//            throw new IllegalArgumentException("Invalid x or y coordinates.");
         }
 
         char[] matrixArray = board.getMatrixData().toCharArray();
