@@ -67,12 +67,12 @@ public class Board {
     }
 
     public void updatePixel(int x, int y, int val) {
-        int index = (x * Constants.RESOLUTION_WIDTH) + y;
+        int index = (y * Constants.RESOLUTION_WIDTH) + x;
         if (index < 0 || index >= this.getMatrixData().length()) {
             LOGGER.error("Invalid coordinates: x = {}, y = {}, index = {}", x, y, index);
             return;
-//            throw new IllegalArgumentException("Invalid x or y coordinates.");
         }
+        LOGGER.info("Valid coordinates: x = {}, y = {}", x, y);
 
         char[] matrixArray = this.getMatrixData().toCharArray();
         matrixArray[index] = (char) ('0' + val); // Convert integer val to char ('0' or '1')

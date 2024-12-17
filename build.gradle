@@ -18,12 +18,11 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.xerial:sqlite-jdbc:3.47.1.0'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.postgresql:postgresql:42.7.3'
     implementation 'com.fasterxml.jackson.core:jackson-databind'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
-
 
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'org.apache.logging.log4j:log4j-core'
