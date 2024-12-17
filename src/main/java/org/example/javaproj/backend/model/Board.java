@@ -1,10 +1,13 @@
 package org.example.javaproj.backend.model;
 
+import org.apache.logging.log4j.LogManager;
 import org.example.javaproj.backend.Constants;
 
 import java.time.Instant;
 
 public class Board {
+    private static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger();
+
     private Long id;
 
     private Long ownerId;
@@ -57,15 +60,22 @@ public class Board {
         this.dateCreated = dateCreated;
     }
 
-    public void updatePixel(Board board, int x, int y, int val) {
-        int index = (x * Constants.RESOLUTION_WIDTH) + y;
-
-        if (index < 0 || index >= board.getMatrixData().length()) {
-            throw new IllegalArgumentException("Invalid x or y coordinates.");
+    public void updateBoardPixels(DrawingMessage drawingMessage) {
+        for (DrawingPoint point : drawingMessage.getPoints()) {
+            this.updatePixel(point.getX(), point.getY(), point.getPen());
         }
+    }
 
-        char[] matrixArray = board.getMatrixData().toCharArray();
+    public void updatePixel(int x, int y, int val) {
+        int index = (y * Constants.RESOLUTION_WIDTH) + x;
+        if (index < 0 || index >= this.getMatrixData().length()) {
+            LOGGER.error("Invalid coordinates: x = {}, y = {}, index = {}", x, y, index);
+            return;
+        }
+        LOGGER.info("Valid coordinates: x = {}, y = {}", x, y);
+
+        char[] matrixArray = this.getMatrixData().toCharArray();
         matrixArray[index] = (char) ('0' + val); // Convert integer val to char ('0' or '1')
-        board.setMatrixData(new String(matrixArray));
+        this.setMatrixData(new String(matrixArray));
     }
 }

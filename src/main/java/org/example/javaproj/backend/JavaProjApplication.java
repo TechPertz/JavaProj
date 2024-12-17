@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class JavaProjApplication {
 
     public static void main(String[] args) {
-        System.out.println("Starting server with test URL http://localhost:8080/test");
+        System.out.println("Starting server with at http://localhost:8080");
         SpringApplication.run(JavaProjApplication.class, args);
     }
 }

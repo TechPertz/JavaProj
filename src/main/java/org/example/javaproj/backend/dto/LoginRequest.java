@@ -1,6 +1,9 @@
 package org.example.javaproj.backend.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class LoginRequest {
+    @JsonProperty("username")
     private String username;
 
     public LoginRequest() {

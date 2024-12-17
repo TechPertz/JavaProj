@@ -36,10 +36,10 @@ public class BoardService {
             return ps;
         }, keyHolder);
 
-        Map<String, Object> keys = keyHolder.getKeys();
-        assert keys != null;
-        long generatedId = ((Number) keys.get("id")).longValue();
-        board.setId(generatedId);
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            board.setId(generatedId.longValue()); // Set the auto-generated ID
+        }
         return board;
     }
 

@@ -4,11 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.example.javaproj.backend.Constants;
 import org.example.javaproj.backend.model.Board;
+import org.example.javaproj.backend.model.DrawingMessage;
+import org.example.javaproj.backend.model.DrawingPoint;
 import org.example.javaproj.backend.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -18,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -29,7 +33,7 @@ public class DrawingController extends TextWebSocketHandler {
     private final BoardService boardService;
     private final ObjectMapper objectMapper;
     private final Map<Long, Lock> boardLocks = new ConcurrentHashMap<>();
-    private final Map<Long, WebSocketSession> sessions = new ConcurrentHashMap<>();
+    private final Map<Long, Set<WebSocketSession>> sessions = new ConcurrentHashMap<>();
 
     public DrawingController(BoardService boardService, ObjectMapper objectMapper) {
         this.boardService = boardService;
@@ -39,7 +43,19 @@ public class DrawingController extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         Long boardId = getBoardIdFromQueryParams(session);
-        sessions.put(boardId, session);
+        sessions.computeIfAbsent(boardId, id -> ConcurrentHashMap.newKeySet()).add(session);
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+        Long boardId = getBoardIdFromQueryParams(session);
+        Set<WebSocketSession> boardSessions = sessions.get(boardId);
+        if (boardSessions != null) {
+            boardSessions.remove(session);
+            if (boardSessions.isEmpty()) {
+                sessions.remove(boardId);
+            }
+        }
     }
 
     @Override
@@ -55,29 +71,24 @@ public class DrawingController extends TextWebSocketHandler {
             }
 
             DrawingMessage drawingMessage = objectMapper.readValue(message.getPayload(), DrawingMessage.class);
-            updateBoard(board, drawingMessage);
+            board.updateBoardPixels(drawingMessage);
+            boardService.updateMatrixBoard(board);
             broadcastUpdate(board.getId(), drawingMessage);
         } finally {
             lock.unlock();
         }
     }
 
-    private void updateBoard(Board board, DrawingMessage drawingMessage) {
-        for (DrawingPoint point : drawingMessage.getPoints()) {
-            board.updatePixel(board, point.getX(), point.getY(), point.getPen());
-        }
-        boardService.updateMatrixBoard(board);
-    }
-
     private void broadcastUpdate(Long boardId, DrawingMessage drawingMessage) throws IOException {
-        WebSocketSession session = sessions.get(boardId);
-        LOGGER.info("Broadcasting drawing message to board {}", boardId);
-        if (session != null && session.isOpen()) {
-            drawingMessage.setType("UPDATE");
-            LOGGER.warn("the set type is {}", drawingMessage.getType());
+        Set<WebSocketSession> boardSessions = sessions.get(boardId);
+        if (boardSessions != null) {
+            LOGGER.info("Broadcasting drawing message to board {}", boardId);
             String message = objectMapper.writeValueAsString(drawingMessage);
-            LOGGER.warn(message);
-            session.sendMessage(new TextMessage(message));
+            for (WebSocketSession session : boardSessions) {
+                if (session.isOpen()) {
+                    session.sendMessage(new TextMessage(message));
+                }
+            }
         }
     }
 
@@ -91,45 +102,5 @@ public class DrawingController extends TextWebSocketHandler {
             );
         }
         return Long.parseLong(paramValue);
-    }
-
-    public static class DrawingMessage {
-        private DrawingPoint[] points;
-        private String type;
-
-        public DrawingPoint[] getPoints() {
-            return points;
-        }
-
-        public void setPoints(DrawingPoint[] points) {
-            this.points = points;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public String getType() {
-            return type;
-        }
-    }
-
-    public static class DrawingPoint {
-        private int x;
-        private int y;
-        private int pen;
-
-        public int getX() {
-            return x;
-        }
-
-        public int getY() {
-            return y;
-        }
-
-        public int getPen() {
-            return pen;
-        }
-
     }
 }

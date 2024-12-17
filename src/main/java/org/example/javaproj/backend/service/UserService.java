@@ -22,26 +22,26 @@ public class UserService {
     }
 
     public User createUser(User user) {
-        String sql = "INSERT INTO users (email, username, date_created) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO users (username, date_created) VALUES (?, ?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, user.getEmail());
-            ps.setString(2, user.getUsername());
-            ps.setTimestamp(3, Timestamp.from(Instant.now()));
+            ps.setString(1, user.getUsername());
+            ps.setTimestamp(2, Timestamp.from(Instant.now()));
             return ps;
         }, keyHolder);
 
-        Map<String, Object> keys = keyHolder.getKeys();
-        long generatedId = ((Number) keys.get("id")).longValue();
-        user.setId(generatedId);
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            user.setId(generatedId.longValue()); // Set the auto-generated ID
+        }
         return user;
     }
 
     public User getUserByUsername(String username) {
-        String sql = "SELECT id, email, username, date_created FROM users WHERE username = ?";
+        String sql = "SELECT id, username, date_created FROM users WHERE username = ?";
         try {
             return jdbcTemplate.queryForObject(sql, this::mapRowToUser, username);
         } catch (EmptyResultDataAccessException e) {
@@ -52,10 +52,8 @@ public class UserService {
     private User mapRowToUser(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();
         user.setId(rs.getLong("id"));
-        user.setEmail(rs.getString("email"));
         user.setUsername(rs.getString("username"));
         user.setDateCreated(rs.getTimestamp("date_created").toInstant());
         return user;
     }
-
 }
